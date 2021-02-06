@@ -2,8 +2,15 @@
 import axios from 'axios';
 import Store from '../store/store'
 //创建axios实例
+let allApi = 'http://192.168.9.44:8090';
+//判断处于什么环境之下
+if(process.env.NODE_ENV === 'production'){
+    //开发环境
+    allApi = window.top.apiUrl
+}
+console.log(process.env.NODE_ENV)
 const service = axios.create({
-    baseURL: 'http://192.168.9.44:9090', //基础请求地址
+    baseURL: allApi, //基础请求地址
     timeout: 5000
 })
 
@@ -15,7 +22,7 @@ service.interceptors.request.use(config => {
     const token = Store.state.token;
     if(token){
         //headers携带数据处理
-        config.headers['X-Access-Token'] = token;
+        // config.headers['X-Access-Token'] = token;
         config.headers['Authorization']  = token;
     }
     if(config.method == 'get') {
